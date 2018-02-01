@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Configuration files -->
+		<script src="translations_style.js"></script>
+		<meta charset="UTF-8">
+		<script src="https://js.uat.judopay.com/js/unstable/judopay.min.js"></script>
+		<style type="text/css"></style>
+		<link href="judobootstrap.css" rel="stylesheet">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?autoload=true&skin=sunburst"></script>
+		<title>Translations example</title>
+	</head>
+	<body class="webpay" style="overflow: scroll">
+		<style>
+			.main-container {
+				background-color: white;
+				color: black;
+				padding: 10px;
+				width: 80%;
+				margin: auto;
+				padding: 50px 100px 50px 100px;
+			}
+			#h1 {
+				color: #4b484f;
+				font-weight: 500;
+				font-size: 40px;
+				display: block;
+				margin: 0;
+				line-height: 1;
+			}
+			#h2 {
+				font-weight: 500;
+				font-size: 30px;
+				margin: 1.5em 0 0;
+				line-height: 1;
+				color: #706d77;
+			}
+			#p {
+				max-width: 800px;
+				margin-bottom: 1em;
+				display: block;
+				box-sizing: border-box;
+			}
+			.sample {
+				max-height: 500px;
+				overflow-y: scroll
+			}
+		</style>
+		<div class="main-container">
+			<h1>Javascript SDK Samples</h1>
+			<h2>Style/translation configuration file</h2>
+			<pre id="sample-1" class="prettyprint sample" style="margin: 0 0 0 0; width:1200px;"></pre>
+			<h2>Result</h2>
+			<!-- The payment container (iframe + button + footer)> -->
+			<div class="row box container-fluid" id="payment-container-1" style="margin: 0 0 0 0;">
+				<div class="center-block">
+					<form action="/Home/JudoCharge" method="post" id="payment-form-1">
+						<div class="form-row">
+							<div id="payment-iframe-1111" width="100%"></div>
+							<!-- Used to display form errors -->
+							<div class="judopay-errors">
+								<br/>
+							</div>
+						</div>
+						<button id="submit-payment-button-2" name="submit-payment" class="btn btn-orange col-xs-12">Submit Payment
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+    // Display and formatting
+    document.getElementById('sample-1').innerText = JSON.stringify({iframe1: customStyle.iframe1}, null, '\t')
+        .replace(/,"/g, ',').replace(/":/g, ':').replace(/{"/g, '{').replace(/\t"/g, '\t');
+
+    var judo1 = new JudoPay('1');
+
+    judo1.create('payment-iframe-1111', customStyle.iframe1);
+	
+</script>

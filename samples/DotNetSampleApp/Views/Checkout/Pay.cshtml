@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+
+        /* Style being applied to the iframe */
+
+        var customStyle = {
+
+            // All the elements in the iframe
+            // Position are from field + label
+
+            iframe: {
+                showCardTypeIcons: true,
+                useTranslations: false,
+                backgroundColor: '#f5f5f5',
+                width: '100%',
+                height: 350,
+                fields: {
+                    generic: {
+                        borderRadius: '',
+                        backgroundColor: 'black',
+                        backgroundColorFocus: 'white',
+                        backgroundColorError: 'white',
+                        backgroundColorValid: 'lightgreen',
+                        textColor: 'black',
+                        textColorFocus: 'black',
+                        textColorError: 'black',
+                        textColorValid: '',
+                        labelTextColor: '#828282',
+                        labelTextColorError: 'red',
+                        labelTextColorValid: '#828282',
+                        borderColor: '',
+                        border: '1px solid #b4b4b4',
+                        borderError: '1px solid #ff0000',
+                        borderStyle: 'solid',
+                        width: '100%'
+                    },
+                    // Field properties will take priority if defined
+                    cardNumber: {
+                        placeholder: 'Card Number',
+                        x: '',
+                        y: '', // eg 250px
+                        width: '',
+                        height: '',
+                        borderRadius: '',
+                        backgroundColor: '',
+                        backgroundColorFocus: '',
+                        backgroundColorError: '',
+                        backgroundColorValid: '',
+                        textColor: '',
+                        textColorFocus: '',
+                        textColorError: '',
+                        textColorValid: '',
+                        labelTextColor: '',
+                        labelTextColorError: '',
+                        labelTextColorValid: '',
+                        borderColor: ''
+                    },
+                    expiryDate: {
+                        placeholder: 'MM/YY',
+                        x: '',
+                        y: '',
+                        width: '',
+                        height: '',
+                        borderRadius: '',
+                        backgroundColor: '',
+                        backgroundColorFocus: '',
+                        backgroundColorError: '',
+                        backgroundColorValid: '',
+                        textColor: '',
+                        textColorFocus: '',
+                        textColorError: '',
+                        textColorValid: '',
+                        labelTextColor: '',
+                        labelTextColorError: '',
+                        labelTextColorValid: '',
+                        borderColor: ''
+                    },
+                    cv2: {
+                        placeholder: 'CVC',
+                        x: '',
+                        y: '',
+                        width: '',
+                        height: '',
+                        borderRadius: '',
+                        backgroundColor: '',
+                        backgroundColorFocus: '',
+                        backgroundColorError: '',
+                        backgroundColorValid: '',
+                        textColor: '',
+                        textColorFocus: '',
+                        textColorError: '',
+                        textColorValid: '',
+                        labelTextColor: '',
+                        labelTextColorError: '',
+                        labelTextColorValid: '',
+                        borderColor: ''
+                    }
+                },
+                errorTranslations: {
+                    0: "El número de la tarjeta de crédito solo puede contener números",
+                    1: "El número de la tarjeta de crédito no es válido",
+                    2: "Tipo de tarjeta de crédito no reconocido. Por favor, vuelva a comprobar su número",
+                    3: "Se requiere un tipo de tarjeta de crédito",
+                    4: "La tarjeta de crédito ha caducado",
+                    5: "La fecha de caducidad de la tarjeta de crédito no es válida",
+                    6: "Fecha de caducidad requerida",
+                    7: "Código {0} demasiado corto para la {1}",
+                    8: "Código de {0} demasiado largo para la {1}",
+                    9: "El código {0} solo puede contener números",
+                    10: "Código de {0} requerido para la tarjeta {1}"
+                },
+                placeholderTranslations: {
+                    "cardNumberPlaceholderText": "Número de tarjeta de crédito",
+                    "cvcPlaceholderText": "CVC",
+                    "expiryPlaceholderText": "Fecha de caducidad"
+                }
+            },
+
+            // Not needed as the outer elements will be handled by the merchant
+            // Can be used to setup default elements
+            paymentForm: {
+                submitButton: {
+                    backgroundColor: 'green',
+                    textColor: 'white'
+                },
+                footer: {
+                    isAmex: true
+                }
+            }
+        };
+    </script>
+    <script>
+        /* All the settings needed by the merchant to enable payments*/
+
+        var customCredentials = {
+            token: '<INSERT TOKEN HERE>'
+        };
+    </script>
+
+    <meta charset="UTF-8">
+
+    <environment include="Development">
+        <script src="http://localhost:5001/js/unstable/judopay.min.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://js.uat.judopay.com/js/unstable/judopay.min.js"></script>
+    </environment>
+
+    <style type="text/css"></style>
+</head>
+
+<body class="webpay">
+    <!-- The payment container (iframe + button + footer)> -->
+    <div class="row box container-fluid" id="payment-container">
+        <div class="center-block">
+            <h2>Checkout</h2>
+            <br />
+            <form action="/Checkout/Pay" method="post" id="payment-form">
+                <div class="form-row">
+                    <label for="card-cv2-expiry">
+                        Enter in details
+                    </label>
+                    
+                    <div id="payment-iframe">
+                    </div>
+                    
+                    <div class="form-group relative">
+
+                        <br />
+                        <label for="postcode">Postcode</label>
+                        <input id="postcode" class="form-control input-validation-error" type="text" placeholder="Postcode" maxlength="10" autocomplete="off" spellcheck="off" />
+                    </div>
+
+                    <!-- Used to display form errors -->
+                    <div id="judopay-errors" class="judopay-errors">
+                    </div>
+                </div>
+                <button id="submit-payment-button" name="submit-payment" class="btn btn-orange col-xs-12">
+                    Submit Payment
+                </button>
+            </form>
+        </div>
+
+        <div class="col-xs-12 footer-border" id="payment-footer">
+            <div class="judo-footer center-block" data-toggle="tooltip" data-placement="bottom">
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<script>
+    var token = customCredentials.token;
+    var judo = new JudoPay("<YOUR TOKEN>");
+    var payment = judo.create('payment-iframe', customStyle.iframe);
+
+    // Handle form submission
+    var form = document.getElementById('payment-form');
+
+    function returnHandler(oneUseToken) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'oneUseToken');
+        hiddenInput.setAttribute('value', oneUseToken);
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+    }
+
+    function errorHandler(result) {
+        // Inform the user if there was an error 
+        // You will want to report on this
+        var errorElement = document.getElementById('judopay-errors');
+        errorElement.textContent = result.error.message;
+    }
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        judo.createToken(payment)
+            .then(function (result) {
+                if (result.error) {
+                    errorHandler(result);
+                } else {
+                    // Send the one use token to your server to be used
+                    returnHandler(result.oneUseToken);
+                }
+            })
+            .catch(function(result) {
+                errorHandler(result);
+            });
+    });
+</script>
