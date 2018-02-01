@@ -27,7 +27,12 @@ var customStyle = {
 		placeholderTranslations: {
 			"cardNumberPlaceholderText": "Número de tarjeta de crédito",
 			"cvcPlaceholderText": "CVC",
-			"expiryPlaceholderText": "Fecha de caducidad"
+			"expiryPlaceholderText": "MM/AA"
+		},
+		labelTranslations: {
+			"cardNumberLabelText": "Número de tarjeta de crédito",
+			"cvcLabelText": "CVC",
+			"expiryLabelText": "Fecha de caducidad"
 		},
         fields: {
             generic: {
@@ -50,6 +55,7 @@ var customStyle = {
             // Field properties will take priority if defined
             cardNumber: {
                 placeholder: 'Card Number',
+                labelText: 'Card Number',
                 x: '',
                 y: '', // eg 250px
                 width: '',
@@ -70,6 +76,7 @@ var customStyle = {
             },
             expiryDate: {
                 placeholder: 'MM/YY',
+				labelText: 'Expiry date',
                 x: '',
                 y: '',
                 width: '',
@@ -90,6 +97,7 @@ var customStyle = {
             },
             cv2: {
                 placeholder: 'CVC',
+				labelText: 'CVC',
                 x: '',
                 y: '',
                 width: '',
