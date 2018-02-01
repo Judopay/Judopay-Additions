@@ -2,13 +2,13 @@
 <html>
 	<head>
 		<!-- Configuration files -->
-		<script src="translations_form.js"></script>
+		<script src="basic_form.js"></script>
 		<meta charset="UTF-8">
 		<script src="https://js.uat.judopay.com/js/unstable/judopay.min.js"></script>
 		<style type="text/css"></style>
 		<link href="judobootstrap.css" rel="stylesheet">
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?autoload=true&skin=sunburst"></script>
-		<title>Translations example</title>
+		<title>Judopay Additions Demo</title>
 	</head>
 	<body class="webpay" style="overflow: scroll">
 		<style>
@@ -47,16 +47,13 @@
 			}
 		</style>
 		<div class="main-container">
-			<h1>Javascript SDK Samples</h1>
-			<h2>Style/translation configuration file</h2>
-			<pre id="sample-1" class="prettyprint sample" style="margin: 0 0 0 0; width:1200px;"></pre>
-			<h2>Result</h2>
+			<h1>Judo Additions</h1>
 			<!-- The payment container (iframe + button + footer)> -->
 			<div class="row box container-fluid" id="payment-container-1" style="margin: 0 0 0 0;">
 				<div class="center-block">
 					<form action="/Home/JudoCharge" method="post" id="payment-form-1">
 						<div class="form-row">
-							<div id="payment-iframe-1111" width="100%"></div>
+							<div id="payment-iframe" width="100%"></div>
 							<!-- Used to display form errors -->
 							<div class="judopay-errors">
 								<br/>
@@ -71,12 +68,6 @@
 	</body>
 </html>
 <script>
-    // Display and formatting
-    document.getElementById('sample-1').innerText = JSON.stringify({iframe1: customStyle.iframe1}, null, '\t')
-        .replace(/,"/g, ',').replace(/":/g, ':').replace(/{"/g, '{').replace(/\t"/g, '\t');
-
-    var judo1 = new JudoPay('1');
-
-    judo1.create('payment-iframe-1111', customStyle.iframe1);
-	
+    var judo = new JudoPay('1');
+    judo.create('payment-iframe', customStyle.iframe);	
 </script>
