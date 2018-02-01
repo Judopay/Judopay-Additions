@@ -1,6 +1,6 @@
 # Judopay Additions
 
-This project is a web UI that will help you setting up a card payment form on your website. The fields holding sensitive information (Card Number, CVC and Expiry Date) are being hosted and processed by Judo in an iframe, helping you to achieve PCI compliance.
+This project is a web UI that will help you set up a card payment form on your website. Any fields holding sensitive information (Card Number, CVC and Expiry Date) are hosted and processed by Judo in an iframe, helping you to achieve PCI compliance.
 
 Judopay Additions allows you to fully modify the styles of the fields to match your website, and all language translations are supported.
 
