@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JudoPayDotNet.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SampleApp.Models;
 
@@ -15,6 +16,13 @@ namespace SampleApp.Controllers
 {
     public class CheckoutController : Controller
     {
+        private readonly IOptions<JudoConfiguration> _judoOptions;
+
+        public CheckoutController(IOptions<JudoConfiguration> judoOptions)
+        {
+            _judoOptions = judoOptions;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -45,10 +53,10 @@ namespace SampleApp.Controllers
 
         private async Task<PaymentReceiptModel> Transaction(PaymentModel model)
         {
-            const string judoId = "<YOUR JUDO ID>";
-            const string token = "<YOUR TOKEN>";
-            const string secret = "<YOUR SECRET>";
-            const string apiVersion = "5.5.0";
+            string judoId = _judoOptions.Value.JudoId;
+            string token = _judoOptions.Value.ApiToken;
+            string secret = _judoOptions.Value.ApiSecret;
+            string apiVersion = _judoOptions.Value.ApiVersion;
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -73,7 +81,7 @@ namespace SampleApp.Controllers
             var payload = JsonConvert.SerializeObject(parameters);
             var stringContent = new StringContent(payload, Encoding.UTF8, "application/json");
 
-            var restResponse = await client.PostAsync(new Uri("https://gw1.judopay-sandbox.com/transactions/preauths"), stringContent);
+            var restResponse = await client.PostAsync(new Uri(_judoOptions.Value.ApiUrl + "/transactions/preauths"), stringContent);
             var readAsStringAsync = await restResponse.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<PaymentReceiptModel>(readAsStringAsync);

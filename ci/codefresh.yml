@@ -1,0 +1,107 @@
+version: '1.0'
+steps:
+  build_webservice:
+    title: Build Judopay-Additions Service
+    image: microsoft/aspnetcore-build:1
+    working_directory: ${{main_clone}}
+    commands:
+      - dotnet restore
+      - dotnet publish -c Release
+    when:
+      branch:
+        ignore:
+          - /^v\d*.*/i
+  build_docker:
+    type: build
+    title: Build Docker Image
+    working_directory: ${{build_webservice}}/samples/DotNetSampleApp
+    dockerfile: Dockerfile
+    image_name: judo/additions
+    tag: '${{CF_SHORT_REVISION}}'
+    when:
+      branch:
+        only:
+          - master
+  push_docker:
+    type: push
+    title: Push Docker Image
+    candidate: ${{build_docker}}
+    tags:
+      - '${{CF_SHORT_REVISION}}'
+    registry: dockerhub
+    when:
+      branch:
+        only:
+          - master
+  deploy_uat:
+    image: judo/terragrunt
+    working_directory: ${{main_clone}}/ci/deploy
+    description: Deploy to UAT
+    environment:
+      - AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}
+      - AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}
+      - AWS_DEFAULT_REGION=eu-west-1
+      - TF_VAR_environment=uat
+      - TF_VAR_image_tag=${{CF_SHORT_REVISION}}
+      - TF_VAR_build_id=${{CF_BUILD_ID}}
+      - TF_VAR_service_name=identity
+      - TF_VAR_region=eu1
+    commands:
+      - mkdir ~/.ssh
+      - echo -e "${{github_sshkey}}" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - rm -rf .terraform
+      - terragrunt apply --terragrunt-non-interactive -auto-approve
+    when:
+      branch:
+        only:
+          - master
+  deploy_prod:
+    image: judo/terragrunt
+    working_directory: ${{main_clone}}/ci/deploy
+    description: Deploy to Prod
+    environment:
+      - AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}
+      - AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}
+      - AWS_DEFAULT_REGION=eu-west-1
+      - TF_VAR_environment=prod
+      - TF_VAR_image_tag=${{CF_SHORT_REVISION}}
+      - TF_VAR_build_id=${{CF_BUILD_ID}}
+      - TF_VAR_service_name=identity
+      - TF_VAR_region=eu1
+    commands:
+      - mkdir ~/.ssh
+      - echo -e "${{github_sshkey}}" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - rm -rf .terraform
+      - terragrunt apply --terragrunt-non-interactive -auto-approve
+    when:
+      branch:
+        only:
+          - /^v\d*.*/i
+  retag_image_previous:
+    type: push
+    title: Tag latest image as previous
+    candidate: judo/additions:latest
+    image_name: judo/additions
+    tags:
+      - 'previous'
+    registry: dockerhub
+    when:
+      branch:
+        only:
+          - /^v\d*.*/i
+  tag_image_latest:
+    type: push
+    title: Tag Image as Latest
+    candidate: judo/additions:${{CF_SHORT_REVISION}}
+    image_name: judo/additions
+    tags:
+      - 'latest'
+    registry: dockerhub
+    when:
+      branch:
+        only:
+          - /^v\d*.*/i
