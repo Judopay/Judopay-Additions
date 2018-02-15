@@ -2,7 +2,7 @@ version: '1.0'
 steps:
   build_webservice:
     title: Build Judopay-Additions Service
-    image: microsoft/aspnetcore-build:2 
+    image: microsoft/aspnetcore-build:2
     working_directory: ${{main_clone}}/samples/DotNetSampleApp
     commands:
       - dotnet restore
@@ -14,7 +14,7 @@ steps:
   build_docker:
     type: build
     title: Build Docker Image
-    working_directory: ${{build_webservice}}/samples/DotNetSampleApp
+    working_directory: ${{build_webservice}}
     dockerfile: Dockerfile
     image_name: judo/additions
     tag: '${{CF_SHORT_REVISION}}'
