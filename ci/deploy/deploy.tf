@@ -37,7 +37,7 @@ data "template_file" "task_definition" {
   }
 }
 
-resource "aws_route53_record" "internal_identity" {
+resource "aws_route53_record" "internal_additionsSDK" {
   zone_id = "${data.terraform_remote_state.dns.dns_internal_domain_zone_id}"
   name    = "${var.service_name}"
   type    = "CNAME"
@@ -45,10 +45,10 @@ resource "aws_route53_record" "internal_identity" {
   records = ["${data.terraform_remote_state.elb_internal.dns_name}"]
 }
 
-resource "aws_route53_record" "public_identity" {
+resource "aws_route53_record" "public_additionsSDK" {
   zone_id = "${data.terraform_remote_state.central_dns.dns_public_environment_domain_zone_id}"
   name    = "${var.service_name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${data.terraform_remote_state.elb_certauth.dns_name}"]
+  records = ["${data.terraform_remote_state.elb_external.dns_name}"]
 }

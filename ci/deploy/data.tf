@@ -28,12 +28,12 @@ data "terraform_remote_state" "elb_internal" {
   }
 }
 
-data "terraform_remote_state" "elb_certauth" {
+data "terraform_remote_state" "elb_external" {
   backend = "s3"
 
   config {
     bucket = "judo-terraform-state"
-    key    = "${var.environment}/${var.region}/elb_certauth/state.tfstate"
+    key    = "${var.environment}/${var.region}/elb_external/state.tfstate"
     region = "eu-west-1"
   }
 }
