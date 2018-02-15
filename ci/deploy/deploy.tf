@@ -50,5 +50,5 @@ resource "aws_route53_record" "public_additionsSDK" {
   name    = "${var.service_name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${data.terraform_remote_state.elb_external.dns_name}"]
+  records = ["${"${var.environment}" == "prod" ? join("",data.terraform_remote_state.elb_external.dns_name) : data.terraform_remote_state.elb_certauth.dns_name}"]
 }
