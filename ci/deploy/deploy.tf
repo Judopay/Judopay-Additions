@@ -16,7 +16,7 @@ module "ecs_service" {
   desired_count                   = "2"
   environment                     = "${var.environment}"
   task_definition                 = "${data.template_file.task_definition.rendered}"
-  alb_listener_rule_priority      = "78"
+  alb_listener_rule_priority      = "80"
   alb_stickiness_duration_seconds = "1800"
   alb_stickiness_enabled          = "true"
 }
