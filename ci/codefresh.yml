@@ -2,7 +2,7 @@ version: '1.0'
 steps:
   build_webservice:
     title: Build Judopay-Additions Service
-    image: microsoft/aspnetcore-build:1
+    image: microsoft/aspnetcore-build:2
     working_directory: ${{main_clone}}/samples/DotNetSampleApp
     commands:
       - dotnet restore
