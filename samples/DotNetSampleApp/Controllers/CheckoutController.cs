@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JudoPayDotNet.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SampleApp.Models;
@@ -17,9 +18,11 @@ namespace SampleApp.Controllers
     public class CheckoutController : Controller
     {
         private readonly IOptions<JudoConfiguration> _judoOptions;
+        private ILogger<CheckoutController> _logger;
 
-        public CheckoutController(IOptions<JudoConfiguration> judoOptions)
+        public CheckoutController(IOptions<JudoConfiguration> judoOptions, ILogger<CheckoutController> logger)
         {
+            _logger = logger;
             _judoOptions = judoOptions;
         }
 
@@ -84,6 +87,7 @@ namespace SampleApp.Controllers
             var restResponse = await client.PostAsync(new Uri(_judoOptions.Value.ApiUrl + "/transactions/preauths"), stringContent);
             var readAsStringAsync = await restResponse.Content.ReadAsStringAsync();
 
+            _logger.LogInformation($"Reply from partner api {readAsStringAsync} when transacting to {_judoOptions.Value.ApiSecret}/transactions/preauths");
             return JsonConvert.DeserializeObject<PaymentReceiptModel>(readAsStringAsync);
         }
     }
