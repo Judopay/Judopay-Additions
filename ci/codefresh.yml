@@ -44,7 +44,7 @@ steps:
       - TF_VAR_environment=uat
       - TF_VAR_image_tag=${{CF_SHORT_REVISION}}
       - TF_VAR_build_id=${{CF_BUILD_ID}}
-      - TF_VAR_service_name=identity
+      - TF_VAR_service_name=additions
       - TF_VAR_region=eu1
     commands:
       - mkdir ~/.ssh
@@ -68,7 +68,7 @@ steps:
       - TF_VAR_environment=prod
       - TF_VAR_image_tag=${{CF_SHORT_REVISION}}
       - TF_VAR_build_id=${{CF_BUILD_ID}}
-      - TF_VAR_service_name=identity
+      - TF_VAR_service_name=additions
       - TF_VAR_region=eu1
     commands:
       - mkdir ~/.ssh
