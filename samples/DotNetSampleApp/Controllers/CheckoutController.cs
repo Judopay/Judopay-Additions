@@ -87,7 +87,7 @@ namespace SampleApp.Controllers
             var restResponse = await client.PostAsync(new Uri(_judoOptions.Value.ApiUrl + "/transactions/preauths"), stringContent);
             var readAsStringAsync = await restResponse.Content.ReadAsStringAsync();
 
-            _logger.LogInformation($"Reply from partner api {readAsStringAsync} when transacting to {_judoOptions.Value.ApiSecret}/transactions/preauths");
+            _logger.LogWarning($"Reply from partner api {readAsStringAsync} when transacting to {_judoOptions.Value.ApiSecret}/transactions/preauths");
             return JsonConvert.DeserializeObject<PaymentReceiptModel>(readAsStringAsync);
         }
     }
