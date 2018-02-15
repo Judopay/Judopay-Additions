@@ -139,16 +139,16 @@
             token: '20KQVtHk3xQwWZXQ'
         };
     </script>
-
     <meta charset="UTF-8">
-
     <environment include="Development">
         <script src="http://localhost:5001/js/unstable/judopay.min.js"></script>
     </environment>
-    <environment exclude="Development">
-        @*<script src="https://js.uat.judopay.com/js/unstable/judopay.min.js"></script>*@
+    <environment include="UAT">
+        <script src="https://js.uat.judopay.com/js/unstable/judopay.min.js"></script>
     </environment>
-
+    <environment include="PROD">
+        <script src="https://js.prod.judopay.com/js/unstable/judopay.min.js"></script>
+    </environment>
     <style type="text/css"></style>
 </head>
 
