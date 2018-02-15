@@ -13,7 +13,7 @@ module "ecs_service" {
   service_name                    = "${var.service_name}"
   host_headers                    = ["${var.service_name}.${var.environment}.judopay.com", "${var.service_name}.judopay.com"]
   service_port                    = "80"
-  desired_count                   = "2"
+  desired_count                   = "1"
   environment                     = "${var.environment}"
   task_definition                 = "${data.template_file.task_definition.rendered}"
   alb_listener_rule_priority      = "90"
