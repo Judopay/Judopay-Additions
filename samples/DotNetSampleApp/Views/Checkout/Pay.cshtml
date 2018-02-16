@@ -1,6 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+<!DOCTYPE html>
 <html>
-
 <head>
     <script>
 
@@ -151,7 +152,6 @@
     </environment>
     <style type="text/css"></style>
 </head>
-
 <body class="webpay">
     <!-- The payment container (iframe + button + footer)> -->
     <div class="row box container-fluid" id="payment-container">
@@ -163,17 +163,15 @@
                     <label for="card-cv2-expiry">
                         Enter in details
                     </label>
-                    
+
                     <div id="payment-iframe">
                     </div>
-                    
-                    <div class="form-group relative">
 
+                    <div class="form-group relative">
                         <br />
                         <label for="postcode">Postcode</label>
                         <input id="postcode" class="form-control input-validation-error" type="text" placeholder="Postcode" maxlength="10" autocomplete="off" spellcheck="off" />
                     </div>
-
                     <!-- Used to display form errors -->
                     <div id="judopay-errors" class="judopay-errors">
                     </div>
@@ -183,20 +181,16 @@
                 </button>
             </form>
         </div>
-
         <div class="col-xs-12 footer-border" id="payment-footer">
             <div class="judo-footer center-block" data-toggle="tooltip" data-placement="bottom">
             </div>
         </div>
-
     </div>
 </body>
-
 </html>
-
 <script>
     var token = customCredentials.token;
-    var judo = new JudoPay(token);
+    var judo = new JudoPay(token @if(_env.EnvironmentName == "PROD>") { Write(",true"); });
     var payment = judo.createCardDetails('payment-iframe', customStyle.iframe);
 
     // Handle form submission
@@ -216,7 +210,7 @@
     }
 
     function errorHandler(result) {
-        // Inform the user if there was an error 
+        // Inform the user if there was an error
         // You will want to report on this
         var errorElement = document.getElementById('judopay-errors');
         errorElement.textContent = result.error.message;
