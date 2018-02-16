@@ -190,7 +190,7 @@
 </html>
 <script>
     var token = customCredentials.token;
-    var judo = new JudoPay(token @if(_env.EnvironmentName == "PROD>") { Write(",true"); });
+    var judo = new JudoPay(token @if(_env.EnvironmentName.Equals("PROD", StringComparison.InvariantCultureIgnoreCase)) { Write(",true"); });
     var payment = judo.createCardDetails('payment-iframe', customStyle.iframe);
 
     // Handle form submission
