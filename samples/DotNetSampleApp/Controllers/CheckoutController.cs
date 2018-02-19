@@ -73,8 +73,6 @@ namespace SampleApp.Controllers
                 { "judoId", judoId },
                 { "amount", 1.01 },
                 { "oneUseToken", model.OneUseToken },
-                { "expiryDate", "1220" },
-                { "cv2", "452" },
                 {"cardAddress", new CardAddressModel
                                 {
                                     PostCode = model.Postcode
