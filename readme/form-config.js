@@ -2,11 +2,11 @@
 var customStyle = {
     iframe : {
         showCardTypeIcons : true,
-        useTranslations : false,
+        language : 'en',
         backgroundColor: '#e5e5e5',
         fields: {
             generic: {
-                borderRadius: '',
+                width: '100%',
                 backgroundColor: 'white',
                 backgroundColorFocus: '#e5ecff',
                 backgroundColorError: '#ffe5e5',
@@ -18,21 +18,18 @@ var customStyle = {
                 labelTextColor: '#828282',
                 labelTextColorError: 'red',
                 labelTextColorValid: 'green',
-                borderColor: '',
                 border: '1px solid #b4b4b4',
-                borderError: '1px solid #ff0000',
-                borderStyle: 'solid',
-                width: '100%'
+                borderRadius: '',
+                borderError: '1px solid #ff0000'
             },
-
             // Field properties will take priority if defined
             cardNumber: {
-                placeholder: 'Card Number',
+                labelText: 'Card Number',
+                placeholderText: 'Card Number',
                 x: '',
                 y: '',
                 width: '',
                 height: '',
-                borderRadius: '',
                 backgroundColor: '',
                 backgroundColorFocus: '',
                 backgroundColorError: '',
@@ -44,15 +41,17 @@ var customStyle = {
                 labelTextColor: '',
                 labelTextColorError: '',
                 labelTextColorValid: '',
-                borderColor: ''
+                border: '',
+                borderRadius: '',
+                borderError: ''
             },
             expiryDate: {
-                placeholder: 'MM/YY',
+                labelText: 'Expiry Date',
+                placeholderText: 'MM/YY',
                 x: '',
                 y: '',
                 width: '',
                 height: '',
-                borderRadius: '',
                 backgroundColor: '',
                 backgroundColorFocus: '',
                 backgroundColorError: '',
@@ -64,15 +63,17 @@ var customStyle = {
                 labelTextColor: '',
                 labelTextColorError: '',
                 labelTextColorValid: '',
-                borderColor: ''
+                border: '',
+                borderRadius: '',
+                borderError: ''
             },
             cv2: {
-                placeholder: 'CVC',
+                labelText: 'CVC',
+                placeholderText: 'CVC',
                 x: '',
                 y: '',
                 width: '',
                 height: '',
-                borderRadius: '',
                 backgroundColor: '',
                 backgroundColorFocus: '',
                 backgroundColorError: '',
@@ -84,7 +85,9 @@ var customStyle = {
                 labelTextColor: '',
                 labelTextColorError: '',
                 labelTextColorValid: '',
-                borderColor: ''
+                border: '',
+                borderRadius: '',
+                borderError: ''
             }
         }
     }

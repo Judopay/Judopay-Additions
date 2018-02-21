@@ -1,0 +1,21 @@
+﻿@using System.IO
+@using System.Text.Encodings.Web
+@model JudoPayDotNet.Models.PaymentRequiresThreeDSecureModel
+@{
+    ViewData["Title"] = "Process 3DSecure";
+}
+
+<h2>Card Authentication</h2>
+
+<div class="col-xs-12">
+    We're contacting your card issuer to see if you need to perform any card verification. Please do
+    not press refresh or back otherwise your transactions maybe interrupted or terminated.
+</div>
+
+
+
+<div class="iframe-row">
+    <iframe id="acsframe" height="400" width="390" src="@Url.Action("Acs", "Checkout", @Model)">
+        Please use a browser that supports iframes
+    </iframe>
+</div>

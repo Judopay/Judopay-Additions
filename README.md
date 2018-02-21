@@ -4,9 +4,9 @@ This project is a web UI that will help you set up a card payment form on your w
 
 Judopay Additions allows you to fully modify the styles of the fields to match your website, and all language translations are supported.
 
-[Try our secure checkout form here!](https://js.uat.judopay.com/html/basic.html)
+[Try our secure checkout form here!](https://js.judopay.com/html/basic.html)
 
-[Or see a translated (Spanish) form here](https://js.uat.judopay.com/html/translations.html)
+[Or see a translated (Spanish) form here](https://js.judopay.com/html/translations.html)
 
 ## Getting started
 
