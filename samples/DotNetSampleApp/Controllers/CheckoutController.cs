@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using JudoPayDotNet;
 using JudoPayDotNet.Models;
-using JudoPayDotNet.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -61,20 +60,10 @@ namespace SampleApp.Controllers
             return Error();
         }
 
-        [HttpGet]
-        public IActionResult ThreeDSecure(PaymentRequiresThreeDSecureModel threeDSecureModel)
-        {
-            return View(threeDSecureModel);
-        }
 
         [HttpGet]
-        public IActionResult Acs(PaymentRequiresThreeDSecureModel threeDSecureModel)
-        {
-            return View(threeDSecureModel);
-        }
-
-        [HttpGet]
-        public IActionResult ConfirmTransaction([FromQuery(Name = "receiptId")]string receiptId)
+        [Route("Checkout/ConfirmTransaction/{receiptId?}")]
+        public IActionResult ConfirmTransaction(string receiptId)
         {
             return View("ConfirmTransaction", receiptId);
         }
@@ -82,27 +71,6 @@ namespace SampleApp.Controllers
         public IActionResult Error()
         {
             return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public async Task<IActionResult> CallbackThreeDSecure([FromForm] string PaRes, [FromForm] string MD)
-        {
-            var client = JudoPaymentsFactory.Create(_judoOptions.Value.ApiToken, _judoOptions.Value.ApiSecret, "http://localhost/partnerapi");
-            var threeDResultModel = new ThreeDResultModel
-            {
-                Md = MD,
-                PaRes = PaRes
-            };
-
-            var receiptId = RetrieveReceiptId(MD);
-            var complete3DSecure = await client.ThreeDs.Complete3DSecure(receiptId, threeDResultModel);
-
-            if (complete3DSecure.HasError)
-            {
-                _logger.LogDebug($"An Error occured - judopay error was: {complete3DSecure.Error.Message}");
-                return Error();
-            }
-
-            return View("CallbackThreeDSecure", complete3DSecure.Response.ReceiptId.ToString());
         }
 
         private async Task<ITransactionResult> Transaction(PaymentModel model)
@@ -143,6 +111,43 @@ namespace SampleApp.Controllers
             return JsonConvert.DeserializeObject<PaymentReceiptModel>(content); 
         }
 
+        /*******************/
+        /* Methods for 3DS */
+        /*******************/
+        [HttpGet]
+        public IActionResult ThreeDSecure(PaymentRequiresThreeDSecureModel threeDSecureModel)
+        {
+            return View(threeDSecureModel);
+        }
+
+        [HttpGet]
+        public IActionResult Acs(PaymentRequiresThreeDSecureModel threeDSecureModel)
+        {
+            ViewData["TermUrl"] = "http://localhost:5050/Checkout/CallbackThreeDSecure";
+            return View(threeDSecureModel);
+        }
+
+        public async Task<IActionResult> CallbackThreeDSecure([FromForm] string PaRes, [FromForm] string MD)
+        {
+            var client = JudoPaymentsFactory.Create(_judoOptions.Value.ApiToken, _judoOptions.Value.ApiSecret, "http://localhost/partnerapi");
+            var threeDResultModel = new ThreeDResultModel
+            {
+                Md = MD,
+                PaRes = PaRes
+            };
+
+            var receiptId = RetrieveReceiptId(MD);
+            var complete3DSecure = await client.ThreeDs.Complete3DSecure(receiptId, threeDResultModel);
+
+            if (complete3DSecure.HasError)
+            {
+                _logger.LogDebug($"An Error occured - judopay error was: {complete3DSecure.Error.Message}");
+                return Error();
+            }
+
+            return View("CallbackThreeDSecure", complete3DSecure.Response.ReceiptId.ToString());
+        }
+
         /*****************************************/
         /* Should be stored in a persistent store*/
         /*****************************************/
@@ -153,7 +158,6 @@ namespace SampleApp.Controllers
         }
         private long RetrieveReceiptId(string md)
         {
-
             return MdReceiptIdStore[md];
         }
     }

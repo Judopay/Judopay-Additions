@@ -1,4 +1,7 @@
 ﻿@model JudoPayDotNet.Models.PaymentRequiresThreeDSecureModel
+@{
+    Layout = null;
+}
 <html>
 <head>
     <title>3D secure</title>
@@ -6,10 +9,10 @@
 <body>
     <form action="@Model.AcsUrl" id="acsForm" method="post" role="form">
         <div class="form-group">
-            @Html.HiddenFor(x => x.Md, new { @id = "MD", @Name = "MD" })
-            @Html.HiddenFor(x => x.PaReq, new { @id = "PaReq", @Name = "PaReq" })
-            @Html.Hidden("TermUrl", "http://localhost:5050/Checkout/CallbackThreeDSecure")
-            @Html.HiddenFor(x => x.ReceiptId, new { @id = "ReceiptId", @Name = "ReceiptId" })
+            <input id="Md" name="Md" type="hidden" value="@Model.Md">
+            <input id="PaReq" name="PaReq" type="hidden" value="@Model.PaReq">
+            <input id="TermUrl" name="TermUrl" type="hidden" value="@ViewData["TermUrl"]">
+            <input id="ReceiptId" name="ReceiptId" type="hidden" value="@Model.ReceiptId">
             <div class="show-js">
                 Redirecting you to your card issuer.
             </div>
