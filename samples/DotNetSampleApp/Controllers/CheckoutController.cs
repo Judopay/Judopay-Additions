@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using JudoPayDotNet;
 using JudoPayDotNet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,54 +40,125 @@ namespace SampleApp.Controllers
         public async Task<IActionResult> Pay(PaymentModel model)
         {
             var result = await Transaction(model);
-            return View("ConfirmTransaction", result.ReceiptId.ToString());
+            if (result == null)
+            {
+                _logger.LogDebug("An Error occured.");
+                return Error();
+            }
+
+            if (result is PaymentReceiptModel)
+            {
+                return View("ConfirmTransaction", result.ReceiptId.ToString());
+            }
+
+            if (result is PaymentRequiresThreeDSecureModel requiresThreeDSecureModel)
+            {
+                RecordTransaction(requiresThreeDSecureModel);
+                return RedirectToAction("ThreeDSecure", requiresThreeDSecureModel);
+            }
+            
+            return Error();
         }
 
+
         [HttpGet]
+        [Route("Checkout/ConfirmTransaction/{receiptId?}")]
         public IActionResult ConfirmTransaction(string receiptId)
         {
-            return View(receiptId);
+            return View("ConfirmTransaction", receiptId);
         }
 
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private async Task<PaymentReceiptModel> Transaction(PaymentModel model)
+        private async Task<ITransactionResult> Transaction(PaymentModel model)
         {
-            string judoId = _judoOptions.Value.JudoId;
-            string token = _judoOptions.Value.ApiToken;
-            string secret = _judoOptions.Value.ApiSecret;
-            string apiVersion = _judoOptions.Value.ApiVersion;
-
             var client = new HttpClient();
+            var judocConfig = _judoOptions.Value;
+
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format($"{token}:{secret}"))));
-            client.DefaultRequestHeaders.Add("Api-Version", apiVersion);
+                "Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format($"{judocConfig.ApiToken}:{judocConfig.ApiSecret}"))));
+            client.DefaultRequestHeaders.Add("Api-Version", judocConfig.ApiVersion);
 
             var parameters = new Dictionary<string, object>
             {
                 { "yourConsumerReference", Guid.NewGuid().ToString() },
                 { "yourPaymentReference", Guid.NewGuid().ToString() },
-                { "judoId", judoId },
+                { "judoId", judocConfig.JudoId },
                 { "amount", 1.01 },
                 { "oneUseToken", model.OneUseToken },
-                {"cardAddress", new CardAddressModel
-                                {
-                                    PostCode = model.Postcode
-                                }
+                { "cardAddress", new CardAddressModel
+                    {
+                        PostCode = model.Postcode
+                    }
                 }
             };
+
             var payload = JsonConvert.SerializeObject(parameters);
             var stringContent = new StringContent(payload, Encoding.UTF8, "application/json");
 
-            var restResponse = await client.PostAsync(new Uri(_judoOptions.Value.ApiUrl + "/transactions/preauths"), stringContent);
-            var readAsStringAsync = await restResponse.Content.ReadAsStringAsync();
+            var restResponse = await client.PostAsync(new Uri(judocConfig.ApiUrl + "/transactions/preauths"), stringContent);
+            var content = await restResponse.Content.ReadAsStringAsync();
 
-            _logger.LogWarning($"Reply from partner api {readAsStringAsync} when transacting to {_judoOptions.Value.ApiUrl}/transactions/preauths");
-            _logger.LogWarning($"Status Code of reply: {restResponse.StatusCode}, reason code: {restResponse.ReasonPhrase}");
-            return JsonConvert.DeserializeObject<PaymentReceiptModel>(readAsStringAsync);
+            _logger.LogDebug($"Reply from partner api {content} when transacting to {judocConfig.ApiUrl}/transactions/preauths");
+            if (content.ToLower().Contains("requires 3d secure"))
+            {
+                return JsonConvert.DeserializeObject<PaymentRequiresThreeDSecureModel>(content);
+            }
+
+            return JsonConvert.DeserializeObject<PaymentReceiptModel>(content); 
+        }
+
+        /*******************/
+        /* Methods for 3DS */
+        /*******************/
+        [HttpGet]
+        public IActionResult ThreeDSecure(PaymentRequiresThreeDSecureModel threeDSecureModel)
+        {
+            return View(threeDSecureModel);
+        }
+
+        [HttpGet]
+        public IActionResult Acs(PaymentRequiresThreeDSecureModel threeDSecureModel)
+        {
+            ViewData["MerchantBaseUrl"] = _judoOptions.Value.MerchantBaseUrl;
+            return View(threeDSecureModel);
+        }
+
+        public async Task<IActionResult> CallbackThreeDSecure([FromForm] string PaRes, [FromForm] string MD)
+        {
+            var client = JudoPaymentsFactory.Create(_judoOptions.Value.ApiToken, _judoOptions.Value.ApiSecret, _judoOptions.Value.ApiUrl);
+            var threeDResultModel = new ThreeDResultModel
+            {
+                Md = MD,
+                PaRes = PaRes
+            };
+
+            var receiptId = RetrieveReceiptId(MD);
+            var complete3DSecure = await client.ThreeDs.Complete3DSecure(receiptId, threeDResultModel);
+
+            if (complete3DSecure.HasError)
+            {
+                _logger.LogDebug($"An Error occured - judopay error was: {complete3DSecure.Error.Message}");
+                return Error();
+            }
+
+            return View("CallbackThreeDSecure", complete3DSecure.Response.ReceiptId.ToString());
+        }
+
+        /*****************************************/
+        /* Should be stored in a persistent store*/
+        /*****************************************/
+        private static Dictionary<string, long> MdReceiptIdStore { get; set; } = new Dictionary<string, long>();
+        private void RecordTransaction(PaymentRequiresThreeDSecureModel requiresThreeDSecureModel)
+        {
+            MdReceiptIdStore.Add(requiresThreeDSecureModel.Md, requiresThreeDSecureModel.ReceiptId);
+        }
+        private long RetrieveReceiptId(string md)
+        {
+            return MdReceiptIdStore[md];
         }
     }
 }

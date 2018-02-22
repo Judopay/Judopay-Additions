@@ -37,67 +37,6 @@
                         borderError: '1px solid #ff0000',
                         borderStyle: 'solid',
                         width: '100%'
-                    },
-                    // Field properties will take priority if defined
-                    cardNumber: {
-                        placeholder: 'Card Number',
-                        x: '',
-                        y: '', // eg 250px
-                        width: '',
-                        height: '',
-                        borderRadius: '',
-                        backgroundColor: '',
-                        backgroundColorFocus: '',
-                        backgroundColorError: '',
-                        backgroundColorValid: '',
-                        textColor: '',
-                        textColorFocus: '',
-                        textColorError: '',
-                        textColorValid: '',
-                        labelTextColor: '',
-                        labelTextColorError: '',
-                        labelTextColorValid: '',
-                        borderColor: ''
-                    },
-                    expiryDate: {
-                        placeholder: 'MM/YY',
-                        x: '',
-                        y: '',
-                        width: '',
-                        height: '',
-                        borderRadius: '',
-                        backgroundColor: '',
-                        backgroundColorFocus: '',
-                        backgroundColorError: '',
-                        backgroundColorValid: '',
-                        textColor: '',
-                        textColorFocus: '',
-                        textColorError: '',
-                        textColorValid: '',
-                        labelTextColor: '',
-                        labelTextColorError: '',
-                        labelTextColorValid: '',
-                        borderColor: ''
-                    },
-                    cv2: {
-                        placeholder: 'CVC',
-                        x: '',
-                        y: '',
-                        width: '',
-                        height: '',
-                        borderRadius: '',
-                        backgroundColor: '',
-                        backgroundColorFocus: '',
-                        backgroundColorError: '',
-                        backgroundColorValid: '',
-                        textColor: '',
-                        textColorFocus: '',
-                        textColorError: '',
-                        textColorValid: '',
-                        labelTextColor: '',
-                        labelTextColorError: '',
-                        labelTextColorValid: '',
-                        borderColor: ''
                     }
                 },
                 errorTranslations: {
@@ -118,26 +57,7 @@
                     "cvcPlaceholderText": "CVC",
                     "expiryPlaceholderText": "Fecha de caducidad"
                 }
-            },
-
-            // Not needed as the outer elements will be handled by the merchant
-            // Can be used to setup default elements
-            paymentForm: {
-                submitButton: {
-                    backgroundColor: 'green',
-                    textColor: 'white'
-                },
-                footer: {
-                    isAmex: true
-                }
             }
-        };
-    </script>
-    <script>
-        /* All the settings needed by the merchant to enable payments*/
-
-        var customCredentials = {
-            token: '20KQVtHk3xQwWZXQ'
         };
     </script>
     <meta charset="UTF-8">
@@ -189,8 +109,7 @@
 </body>
 </html>
 <script>
-    var token = customCredentials.token;
-    var judo = new JudoPay(token @if(_env.EnvironmentName.Equals("PROD", StringComparison.InvariantCultureIgnoreCase)) { Write(",true"); });
+    var judo = new JudoPay('20KQVtHk3xQwWZXQ', true);
     var payment = judo.createCardDetails('payment-iframe', customStyle.iframe);
 
     // Handle form submission

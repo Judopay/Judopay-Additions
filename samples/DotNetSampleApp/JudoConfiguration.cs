@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SampleApp
+﻿namespace SampleApp
 {
     public class JudoConfiguration
     {
@@ -12,5 +7,6 @@ namespace SampleApp
         public string ApiSecret { get; set; }
         public string ApiVersion { get; set; }
         public string JudoId { get; set; }
+        public string MerchantBaseUrl { get; set; }
     }
 }
