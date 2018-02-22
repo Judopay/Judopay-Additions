@@ -7,5 +7,6 @@
         public string ApiSecret { get; set; }
         public string ApiVersion { get; set; }
         public string JudoId { get; set; }
+        public string MerchantBaseUrl { get; set; }
     }
 }

@@ -123,7 +123,7 @@ namespace SampleApp.Controllers
         [HttpGet]
         public IActionResult Acs(PaymentRequiresThreeDSecureModel threeDSecureModel)
         {
-            ViewData["TermUrl"] = "http://localhost:5050/Checkout/CallbackThreeDSecure";
+            ViewData["MerchantBaseUrl"] = _judoOptions.Value.MerchantBaseUrl;
             return View(threeDSecureModel);
         }
 
