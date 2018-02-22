@@ -129,7 +129,7 @@ namespace SampleApp.Controllers
 
         public async Task<IActionResult> CallbackThreeDSecure([FromForm] string PaRes, [FromForm] string MD)
         {
-            var client = JudoPaymentsFactory.Create(_judoOptions.Value.ApiToken, _judoOptions.Value.ApiSecret, "http://localhost/partnerapi");
+            var client = JudoPaymentsFactory.Create(_judoOptions.Value.ApiToken, _judoOptions.Value.ApiSecret, _judoOptions.Value.ApiUrl);
             var threeDResultModel = new ThreeDResultModel
             {
                 Md = MD,
