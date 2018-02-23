@@ -10,7 +10,7 @@ Judopay Additions allows you to fully modify the styles of the fields to match y
 
 ## Getting started
 
-See how easy it is to integrate Additions into your existing website on our Wiki at https://github.com/Judopay/Judopay-Additions/wiki
+See how easy it is to integrate Additions into your existing website on our [Wiki]( https://github.com/Judopay/Judopay-Additions/wiki)
 
 ## License
 
