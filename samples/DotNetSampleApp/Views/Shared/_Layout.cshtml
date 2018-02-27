@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SampleApp</title>
+    <title>@ViewData["Title"] - </title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -26,7 +26,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Checkout" asp-action="Index" class="navbar-brand">SampleApp</a>
             </div>
         </div>
     </nav>
@@ -34,7 +33,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - SampleApp</p>
+            <p>&copy; @DateTime.Today.Year</p>
         </footer>
     </div>
 

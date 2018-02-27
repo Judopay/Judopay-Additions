@@ -43,7 +43,7 @@ namespace SampleApp.Controllers
 
             if (result is PaymentReceiptModel)
             {
-                return View("ConfirmTransaction", result);
+                return RedirectToAction("ConfirmTransaction", new { result.Result, result.ReceiptId });
             }
 
             if (result is PaymentRequiresThreeDSecureModel requiresThreeDSecureModel)
@@ -51,16 +51,19 @@ namespace SampleApp.Controllers
                 RecordTransaction(requiresThreeDSecureModel);
                 return RedirectToAction("ThreeDSecure", requiresThreeDSecureModel);
             }
-            
+
             return Error();
         }
 
-
-        [HttpGet]
-        [Route("Checkout/ConfirmTransaction/{receiptId?}")]
-        public IActionResult ConfirmTransaction(string receiptId)
+        [Route("Checkout/ConfirmTransaction")]
+        public IActionResult ConfirmTransaction(long receiptId, string result)
         {
-            return View("ConfirmTransaction", receiptId);
+            var confirmTransactionModel = new ConfirmTransactionModel
+            {
+                ReceiptId = receiptId,
+                Result = result
+            };
+            return View("ConfirmTransaction", confirmTransactionModel);
         }
 
         public IActionResult Error()
@@ -103,7 +106,7 @@ namespace SampleApp.Controllers
                 return JsonConvert.DeserializeObject<PaymentRequiresThreeDSecureModel>(content);
             }
 
-            return JsonConvert.DeserializeObject<PaymentReceiptModel>(content); 
+            return JsonConvert.DeserializeObject<PaymentReceiptModel>(content);
         }
 
         /*******************/
@@ -133,14 +136,13 @@ namespace SampleApp.Controllers
 
             var receiptId = RetrieveReceiptId(MD);
             var complete3DSecure = await client.ThreeDs.Complete3DSecure(receiptId, threeDResultModel);
-
             if (complete3DSecure.HasError)
             {
                 _logger.LogDebug($"An Error occured - judopay error was: {complete3DSecure.Error.Message}");
                 return Error();
             }
 
-            return View("ConfirmTransaction", complete3DSecure.Response);
+            return View("CallbackThreeDSecure", new ConfirmTransactionModel { Result = complete3DSecure.Response.Result, ReceiptId = complete3DSecure.Response.ReceiptId});
         }
 
         /*****************************************/
@@ -156,10 +158,16 @@ namespace SampleApp.Controllers
             return MdReceiptIdStore[md];
         }
     }
-}
 
-public class PaymentModel
-{
-    public string OneUseToken { get; set; }
-    public string Postcode { get; set; }
+    public class ConfirmTransactionModel
+    {
+        public long ReceiptId { get; set; }
+        public string Result { get; set; }
+    }
+
+    public class PaymentModel
+    {
+        public string OneUseToken { get; set; }
+        public string Postcode { get; set; }
+    }
 }
