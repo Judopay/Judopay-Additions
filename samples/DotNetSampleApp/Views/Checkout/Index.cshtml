@@ -1,17 +1,141 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+@{
+    ViewData["Title"] = "Checkout";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <p></p>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+
+        /* Style being applied to the iframe */
+
+        var customStyle = {
+
+            // All the elements in the iframe
+            // Position are from field + label
+
+            iframe: {
+                showCardTypeIcons: true,
+                useTranslations: false,
+                backgroundColor: '#f5f5f5',
+                layout: 'compact',
+                fields: {
+                    generic: {
+                        borderRadius: '3px',
+                        backgroundColor: 'white',
+                        backgroundColorFocus: 'white',
+                        backgroundColorError: 'white',
+                        backgroundColorValid: 'white',
+                        textColor: 'black',
+                        textColorFocus: 'black',
+                        textColorError: 'red',
+                        textColorValid: 'black',
+                        labelTextColor: '#828282',
+                        labelFontFamily: '"Helvetica Neue",Helvetica,Arial,sans-serif;',
+                        labelTextColorError: 'red',
+                        labelTextColorValid: '#828282',
+                        border: '1px solid #b4b4b4',
+                        borderError: '1px solid #ff0000',
+                        borderFocus: '1.5px solid #2E86C1'
+                    },
+                    cardNumber: {
+                        labelText: 'CARD NUMBER',
+                        placeholder: '0000 0000 0000 0000'
+                    },
+                    expiryDate: {
+                        labelText: 'EXPIRY DATE',
+                        placeholder: 'MM / YY'
+                    },
+                    cv2: {
+                        labelText: 'CV2 / SECURITY CODE',
+                        placeholder: 'CV2'
+                    }
+                }
+            }
+        };
+    </script>
+    <meta charset="UTF-8">
+    <environment include="Development">
+        <script src="http://localhost:5001/js/unstable/judopay.min.js"></script>
+    </environment>
+    <environment include="UAT">
+        <script src="https://js.uat.judopay.com/js/unstable/judopay.min.js"></script>
+    </environment>
+    <environment include="PROD">
+        <script src="https://js.judopay.com/js/unstable/judopay.min.js"></script>
+    </environment>
+</head>
+<body>
+    <br />
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color: #e6e6e6">
+                    <h3 class="panel-title">
+                        Card Details
+                    </h3>
+                </div>
+                <div class="panel-body" style="background-color: #f5f5f5">
+
+                    <form role="form" action="/Checkout/Pay" method="post" id="payment-form">
+                        <div id="payment-iframe">
+                        </div>
+                        <!-- Used to display form errors -->
+                        @*<div id="judopay-errors" class="judopay-errors">*@
+                        @*</div>*@
+                        <button id="submit-payment-button" name="submit-payment" class="btn col-xs-8 col-xs-offset-2" style='font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 16px;font-weight: bold;background-color: #ffbe0f; box-shadow:0 2px 0 0 #b3850b'>
+                            Pay
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Overview</h2>
-        <ul>
-            @Html.ActionLink("Pay", "Pay", "Checkout")
-        </ul>
-    </div>
-    <div class="col-md-4">
-    </div>
-</div>
+</body>
+</html>
+<script>
+    var judo = new JudoPay('20KQVtHk3xQwWZXQ', true);
+    var payment = judo.createCardDetails('payment-iframe', customStyle.iframe);
+
+    // Handle form submission
+    var form = document.getElementById('payment-form');
+
+    function returnHandler(oneUseToken) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'oneUseToken');
+        hiddenInput.setAttribute('value', oneUseToken);
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+    }
+
+    function errorHandler(result) {
+        // Inform the user if there was an error
+        // You will want to report on this
+        var errorElement = document.getElementById('judopay-errors');
+        errorElement.textContent = result.error.message;
+    }
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        judo.createToken(payment)
+            .then(function (result) {
+                if (result.error) {
+                    errorHandler(result);
+                } else {
+                    // Send the one use token to your server to be used
+                    returnHandler(result.oneUseToken);
+                }
+            })
+            .catch(function (result) {
+                errorHandler(result);
+            });
+    });
+</script>

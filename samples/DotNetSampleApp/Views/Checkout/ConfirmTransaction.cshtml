@@ -1,7 +1,6 @@
-﻿@model string
+﻿@model JudoPayDotNet.Models.ITransactionResult
 @{
     ViewData["Title"] = "Transaction sucessful!";
 }
-
-<h2>Transaction was Successful</h2>
-<p>We have successfully transacted! Receipt id for this transaction is: @Model</p>
+<h2>The transaction was had a result of @Model.Result</h2>
+<p>Receipt id for this transaction is: @Model.ReceiptId</p>

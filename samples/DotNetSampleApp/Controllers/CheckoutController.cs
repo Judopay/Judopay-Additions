@@ -31,11 +31,6 @@ namespace SampleApp.Controllers
             return View();
         }
 
-        public IActionResult Pay()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Pay(PaymentModel model)
         {
@@ -48,7 +43,7 @@ namespace SampleApp.Controllers
 
             if (result is PaymentReceiptModel)
             {
-                return View("ConfirmTransaction", result.ReceiptId.ToString());
+                return View("ConfirmTransaction", result);
             }
 
             if (result is PaymentRequiresThreeDSecureModel requiresThreeDSecureModel)
@@ -145,7 +140,7 @@ namespace SampleApp.Controllers
                 return Error();
             }
 
-            return View("CallbackThreeDSecure", complete3DSecure.Response.ReceiptId.ToString());
+            return View("ConfirmTransaction", complete3DSecure.Response);
         }
 
         /*****************************************/
