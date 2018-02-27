@@ -6,6 +6,7 @@
     <title>Additions</title>
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css" />
         <meta name="x-stylesheet-fallback-test" content="" class="sr-only" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName("SCRIPT"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href="'+c[e]+'" '+d+"/>")}("position","absolute",["\/lib\/bootstrap\/dist\/css\/bootstrap.min.css"], "rel=\u0022stylesheet\u0022 ");</script>
+        
         <style> 
 body {
     padding-top: 50px;
@@ -124,13 +125,13 @@ body {
     <br />
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-default">
+            <div id="payment-panel" class="panel panel-default">
                 <div class="panel-heading" style="background-color: #e6e6e6">
                     <h3 class="panel-title">
                         Card Details
                     </h3>
                 </div>
-                <div class="panel-body" style="background-color: #f5f5f5">
+                <div id="payment-form" class="panel-body" style="background-color: #f5f5f5">
 
                     <form role="form" action="/Checkout/Pay" method="post" id="payment-form">
                         <div id="payment-iframe">
@@ -141,6 +142,9 @@ body {
                         </button>
                     </form>
                 </div>
+            </div>
+            <div id="result" style="display:none">
+                    
             </div>
         </div>
     </div>
@@ -154,16 +158,15 @@ body {
     var form = document.getElementById('payment-form');
 
     function returnHandler(oneUseToken) {
-        // Insert the token ID into the form so it gets submitted to the server
-        var form = document.getElementById('payment-form');
-        var hiddenInput = document.createElement('input');
-        hiddenInput.setAttribute('type', 'hidden');
-        hiddenInput.setAttribute('name', 'oneUseToken');
-        hiddenInput.setAttribute('value', oneUseToken);
-        form.appendChild(hiddenInput);
+        var paymentForm = document.getElementById("payment-panel");
+        paymentForm.style.display = "none";
 
-        // Submit the form
-        form.submit();
+        var result = document.getElementById('result')
+        result.style.display = "block";
+        result.innerHTML = "<div style='text-align: center'>" +
+                                "<h3 style=''> You have succesfully generated a one use token!</h3>" +
+                                "<p style='font-family: \"Helvetica Neue\",Helvetica,Arial,sans-serif;font-size: 16px;font-weight: bold;'> Your generated token starts "+ oneUseToken.substring(0, 20) + "...</p>"+
+                            "</div>";
     }
 
     function errorHandler(result) {
@@ -175,7 +178,6 @@ body {
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
-
         judo.createToken(payment)
             .then(function (result) {
                 if (result.error) {
@@ -196,9 +198,6 @@ body {
             <p>&copy; 2018</p>
         </footer>
     </div>
-
-    
-    
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js" crossorigin="anonymous" integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
         </script>
 <script>(window.jQuery||document.write("\u003Cscript src=\u0022\/lib\/jquery\/dist\/jquery.min.js\u0022 crossorigin=\u0022anonymous\u0022 integrity=\u0022sha384-K\u002BctZQ\u002BLL8q6tP7I94W\u002BqzQsfRV2a\u002BAfHIi9k8z8l9ggpc8X\u002BYtst4yBo\/hH\u002B8Fk\u0022\u003E\u003C\/script\u003E"));</script>
@@ -206,8 +205,5 @@ body {
         </script>
 <script>(window.jQuery && window.jQuery.fn && window.jQuery.fn.modal||document.write("\u003Cscript src=\u0022\/lib\/bootstrap\/dist\/js\/bootstrap.min.js\u0022 crossorigin=\u0022anonymous\u0022 integrity=\u0022sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa\u0022\u003E\u003C\/script\u003E"));</script>
         <script src="/js/site.min.js?v=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU"></script>
-    
-
-    
 </body>
 </html>
