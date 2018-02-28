@@ -1,4 +1,4 @@
-# Judopay Additions
+# Judopay Additions [![Build Status](https://travis-ci.org/Judopay/Judo-Ruby.svg?branch=master)](https://travis-ci.org/Judopay/Judo-Ruby)
 
 This project is a web UI that will help you set up a card payment form on your website. Any fields holding sensitive information (Card Number, CVC and Expiry Date) are hosted and processed by Judo in an iframe, helping you to achieve PCI compliance.
 
