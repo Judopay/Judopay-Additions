@@ -10,7 +10,7 @@ Or check out our [translation sample](https://js.judopay.com/html/dynamic_transl
 
 ## Getting started
 
-See how easy it is to integrate Additions into your existing website on our [Wiki](https://github.com/Judopay/Judopay-Additions/wiki/Adding-payment-fields-to-your-website)
+See how easy it is to integrate Additions into your existing website on our [Wiki](https://github.com/Judopay/Judopay-Additions/wiki)
 
 ## License
 
