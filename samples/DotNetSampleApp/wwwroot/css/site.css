@@ -39,14 +39,18 @@ a {
     text-decoration: none;
 }
 
-    a:hover,
-    a:focus {
-        color: #d99f00;
-        text-decoration: underline;
-    }
+a:hover,
+a:focus {
+    color: #d99f00;
+    text-decoration: underline;
+}
 
-    a:focus {
-        outline: thin dotted;
-        outline: 5px auto -webkit-focus-ring-color;
-        outline-offset: -2px;
-    }
+a:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+.judopay-errors {
+    color: red;
+}
