@@ -48,7 +48,7 @@ steps:
       - TF_VAR_region=eu1
     commands:
       - mkdir ~/.ssh
-      - echo -e "${{github_sshkey}}" > ~/.ssh/id_rsa
+      - echo "${{github_sshkey}}" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - ssh-keyscan github.com >> ~/.ssh/known_hosts
       - rm -rf .terraform
@@ -72,7 +72,7 @@ steps:
       - TF_VAR_region=eu1
     commands:
       - mkdir ~/.ssh
-      - echo -e "${{github_sshkey}}" > ~/.ssh/id_rsa
+      - echo "${{github_sshkey}}" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - ssh-keyscan github.com >> ~/.ssh/known_hosts
       - rm -rf .terraform
