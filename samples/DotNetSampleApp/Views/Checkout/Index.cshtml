@@ -57,37 +57,38 @@
 </head>
 <body>
     <br />
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="background-color: #e6e6e6">
-                    <h3 class="panel-title">
-                        Card Details
-                    </h3>
-                </div>
-                <div class="panel-body" style="background-color: #f5f5f5">
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="background-color: #e6e6e6">
+                <h3 class="panel-title">
+                    Card Details
+                </h3>
+            </div>
+            <div class="panel-body" style="background-color: #f5f5f5">
 
-                    <form role="form" action="/Checkout/Pay" method="post" id="payment-form">
-                        <div id="payment-iframe">
-                        </div>
-                        <!-- Used to display form errors -->
-                        <button id="submit-payment-button" name="submit-payment" class="btn col-xs-8 col-xs-offset-2" style='font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 16px;font-weight: bold;background-color: #ffbe0f; box-shadow:0 2px 0 0 #b3850b'>
-                            Pay
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div id="languages" class="btn col-xs-8 col-xs-offset-2">
-                <div id="en" class="flag flag-gb" onclick="javascript: judo.changeIframeLanguage('en');"></div>
-                <div id="es" class="flag flag-es" onclick="javascript: judo.changeIframeLanguage('es');"></div>
-                <div id="fr" class="flag flag-fr" onclick="javascript: judo.changeIframeLanguage('fr');"></div>
-                <div id="de" class="flag flag-de" onclick="javascript: judo.changeIframeLanguage('de');"></div>
-                <div id="pt" class="flag flag-pt" onclick="javascript: judo.changeIframeLanguage('pt');"></div>
-            </div>
-            <div class="judopay-errors" style="height: 45px">
+                <form role="form" action="/Checkout/Pay" method="post" id="payment-form">
+                    <div id="payment-iframe">
+                    </div>
+                    <!-- Used to display form errors -->
+                    <button id="submit-payment-button" name="submit-payment" class="btn col-xs-8 col-xs-offset-2" style='font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 16px;font-weight: bold;background-color: #ffbe0f; box-shadow:0 2px 0 0 #b3850b'>
+                        Pay
+                    </button>
+                </form>
             </div>
         </div>
+        <div class="judopay-errors" style="height: 38px">
+        </div>
     </div>
+</div>
+    
+<div id="languages" class="btn col-xs-8 col-xs-offset-2">
+    <div id="en" class="flag flag-gb" onclick="javascript: judo.changeIframeLanguage('en');"></div>
+    <div id="es" class="flag flag-es" onclick="javascript: judo.changeIframeLanguage('es');"></div>
+    <div id="fr" class="flag flag-fr" onclick="javascript: judo.changeIframeLanguage('fr');"></div>
+    <div id="de" class="flag flag-de" onclick="javascript: judo.changeIframeLanguage('de');"></div>
+    <div id="pt" class="flag flag-pt" onclick="javascript: judo.changeIframeLanguage('pt');"></div>
+</div>
 </body>
 </html>
 <script>
