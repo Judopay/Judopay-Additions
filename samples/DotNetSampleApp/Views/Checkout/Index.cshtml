@@ -114,7 +114,8 @@
     function errorHandler(result) {
         // Inform the user if there was an error
         // You will want to report on this
-        var errorElement = document.getElementById('judopay-errors');
+        var errorElement = document.getElementsByClassName('judopay-errors')[0];
+		if (errorElement === null) return;
         errorElement.textContent = result.error.message;
     }
 
