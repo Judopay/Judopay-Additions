@@ -21,26 +21,9 @@
                 useTranslations: false,
                 backgroundColor: '#f5f5f5',
                 layout: 'compact',
-                fields: {
-                    generic: {
-                        borderRadius: '3px',
-                        backgroundColor: 'white',
-                        backgroundColorFocus: 'white',
-                        backgroundColorError: 'white',
-                        backgroundColorValid: 'white',
-                        textColor: 'black',
-                        textColorFocus: 'black',
-                        textColorError: 'red',
-                        textColorValid: 'black',
-                        labelTextColor: '#828282',
-                        labelFontFamily: '"Helvetica Neue",Helvetica,Arial,sans-serif;',
-                        labelTextColorError: 'red',
-                        labelTextColorValid: '#828282',
-                        border: '1px solid #b4b4b4',
-                        borderError: '1px solid #ff0000',
-                        borderFocus: '1.5px solid #2E86C1'
-                    }
-                }
+                styles: {},
+                errorFieldId: 'errors',
+
             }
         };
     </script>
@@ -49,7 +32,7 @@
         <script src="http://localhost:5001/js/unstable/judopay.min.js"></script>
     </environment>
     <environment include="UAT">
-        <script src="https://additionsjs.uat.judopay.com/releases/v0.0.1/judopay.min.js"></script>
+        <script src="https://additionsjs.uat.judopay.com/releases/v0.1.260/judopay.min.js"></script>
     </environment>
     <environment include="PROD">
         <script src="https://additionsjs.judopay.com/releases/v0.0.1/judopay.min.js"></script>
@@ -77,7 +60,7 @@
                 </form>
             </div>
         </div>
-        <div class="judopay-errors" style="height: 38px">
+        <div id="errors" class="judopay-errors" style="height: 38px">
         </div>
     </div>
 </div>
