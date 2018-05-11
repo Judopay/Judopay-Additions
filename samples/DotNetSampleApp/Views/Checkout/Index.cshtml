@@ -81,14 +81,22 @@
     // Handle form submission
     var form = document.getElementById('payment-form');
 
-    function returnHandler(oneUseToken) {
+    function returnHandler(oneUseToken, clientDetails) {
         // Insert the token ID into the form so it gets submitted to the server
         var form = document.getElementById('payment-form');
         var hiddenInput = document.createElement('input');
         hiddenInput.setAttribute('type', 'hidden');
         hiddenInput.setAttribute('name', 'oneUseToken');
         hiddenInput.setAttribute('value', oneUseToken);
+
         form.appendChild(hiddenInput);
+
+        var deviceInput = document.createElement('input');
+        deviceInput.setAttribute('type', 'hidden');
+        deviceInput.setAttribute('name', 'deviceId');
+        deviceInput.setAttribute('value', clientDetails);
+
+        form.appendChild(deviceInput);
 
         // Submit the form
         form.submit();
@@ -111,7 +119,7 @@
                     errorHandler(result);
                 } else {
                     // Send the one use token to your server to be used
-                    returnHandler(result.oneUseToken);
+                    returnHandler(result.oneUseToken, result.clientDetails);
                 }
             })
             .catch(function (result) {
