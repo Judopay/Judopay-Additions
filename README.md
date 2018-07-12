@@ -6,7 +6,7 @@ Judopay Additions allows you to fully modify the styles of the fields to match y
 
 [Try our secure checkout form here!](https://js.judopay.com/html/basic.html)
 
-Or check out our [translation sample](https://additions.prod.judopay.com/Checkout/Index) where you can dynamically switch the form between 5 languages.
+Or check out our [translation sample](https://additions.judopay.com/Checkout/Index) where you can dynamically switch the form between 5 languages.
 
 ## Getting started
 
