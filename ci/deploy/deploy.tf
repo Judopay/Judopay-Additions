@@ -11,7 +11,7 @@ provider "aws" {
 module "ecs_service" {
   source                          = "git@github.com:Judopay/Terraform//modules//aws//ecs_service_internal"
   service_name                    = "${var.service_name}"
-  host_headers                    = ["${var.service_name}.${var.environment}.judopay.com"]
+  host_headers                    = ["${var.service_name}.${var.environment}.judopay.com", "${var.service_name}.judopay.com"]
   service_port                    = "80"
   desired_count                   = "1"
   environment                     = "${var.environment}"
