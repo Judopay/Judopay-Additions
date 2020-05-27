@@ -3,7 +3,7 @@ version: '3'
 services:
   additions-dotnetsample:
     build:
-      context: ./samples/DotNetSampleApp
+      context: .
     ports:
       - "81:80"
     environment:

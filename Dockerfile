@@ -11,7 +11,7 @@ FROM mcr.microsoft.com/dotnet/core/runtime:2.2
 RUN apt-get update
 
 RUN mkdir /app
-COPY --from=build /src/bin/Release/netcoreapp2.0/publish /app
+COPY --from=build /src/samples/DotNetSampleApp/bin/Release/netcoreapp2.0/publish /app
 
 WORKDIR /app
 
