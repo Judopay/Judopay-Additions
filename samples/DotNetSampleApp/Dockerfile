@@ -1,12 +1,21 @@
-FROM microsoft/aspnetcore:2
-COPY bin/Release/netcoreapp2.0/publish/ /root/
-WORKDIR /root
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+COPY . /src
+WORKDIR /src
 
-RUN mkdir /usr/local/share/ca-certificates/judopay
-ADD certs/judo_root_ca.crt /usr/local/share/ca-certificates/judopay/
-ADD certs/judo_intermediate_ca.crt /usr/local/share/ca-certificates/judopay/
-RUN update-ca-certificates;
+RUN dotnet restore
+
+RUN dotnet publish -c Release
+
+FROM mcr.microsoft.com/dotnet/core/runtime:2.2
+
+RUN apt-get update
+
+RUN mkdir /app
+COPY --from=build /src/bin/Release/netcoreapp2.0/publish /app
+
+WORKDIR /app
 
 EXPOSE 80/tcp
 ENV ASPNETCORE_URLS http://*:80
-ENTRYPOINT dotnet SampleApp.dll
+
+CMD ["dotnet", "SampleApp.dll"]

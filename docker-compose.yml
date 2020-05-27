@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  additions-dotnetsample:
+    build:
+      context: ./samples/DotNetSampleApp
+    ports:
+      - "81:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
